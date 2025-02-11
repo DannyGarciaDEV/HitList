@@ -1,0 +1,98 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Header */
+  .header {
+    background-color: #1e1e1e;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+  
+  }
+  
+  /* Notification */
+  .notification {
+    padding: 15px;
+    margin: 10px auto;
+    width: 50%;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  
+  .notification.success {
+    background: #5f94d5;
+    color: white;
+  }
+  
+  .notification.error {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  /* Form */
+  form {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px auto;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  input {
+    padding: 8px;
+    border: 1 solid #5f94d5;;
+    background: #121212;
+    color: white;
+    border-radius: 3px;
+  }
+  
+  button {
+    background: #5f94d5;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  button:hover {
+    background: #456ea0;
+    
+  }
+  
+  /* Filter */
+  .filter {
+    margin: 20px auto;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .filter input {
+    flex: 1;
+  }
+  
+ 
+  .company-item button {
+    background: #e74c3c;
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+  
+  .company-item button:hover {
+    background: #c0392b;
+  }
+  
