@@ -17,10 +17,10 @@ const create = (newObject) => {
   });
 };
 
-const removePerson = (id) => {
+const removeCompany = (id) => {
   const request = axios.delete(`${baseUrl}/${id}`);
   return request.then(response => {
-    console.log('Remove Person Response:', response.data);
+    console.log('Remove Company Response:', response.data);
     return response.data;
   });
 };
@@ -33,4 +33,6 @@ const update = (id, newObject) => {
   });
 };
 
-export default { getAll, create, removePerson, update };
+
+
+export default { getAll, create, removeCompany, update };
