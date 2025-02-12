@@ -1,9 +1,46 @@
-# React + Vite
+# HitList App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The **HitList** app is a simple React-based application that allows users to manage a list of companies. Users can add, filter, update, and delete company information. The app communicates with a backend service to store and manage the data.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# HitList
+- **Add Companies**: Users can add a new company by providing the company name, phone number, and an optional description.
+- **Filter Companies**: Users can filter the list of companies based on the name.
+- **Update Company Information**: If a company already exists, users can update its information, including its phone number.
+- **Delete Companies**: Users can delete a company from the list.
+- **Notifications**: The app shows success or error notifications for add, update, and delete actions.
+- **Responsive UI**: The app is designed to work well on different screen sizes.
+
+## Technologies Used
+
+- **React**: For building the user interface.
+- **CSS**: For styling the components.
+- **JavaScript (ES6+)**: For the functionality and logic of the app.
+- **Axios (or Fetch)**: For making HTTP requests to the backend.
+- **Backend Service (companiesServices)**: Handles interactions with the backend API for CRUD operations.
+
+## Installation
+
+To run the app locally, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/DannyGarciaDEV/HitList
+   cd hitlist
+   npm install
+   npm run dev
+   ```
+
+Open Terminal in 'hitlist'
+
+```
+npm install -g json-server
+
+json-server --watch db.json --port 5000
+
+```
+
+
+  
+
