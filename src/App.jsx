@@ -1,223 +1,133 @@
 import React, { useState, useEffect } from 'react';
-import companiesServices from './services/companies.jsx';
-
-import './App.css'; // Import your CSS file
-
-const Heading = ({ text }) => {
-  return <h2>{text}</h2>;
-};
-
-const Filter = ({ text, value, handleNewChange }) => {
-  return (
-    <div>
-      {text} <input value={value} onChange={handleNewChange} />
-    </div>
-  );
-};
-
-const Part = ({ text, value, handleNewChange }) => {
-  return (
-    <div>
-      {text} <input value={value} onChange={handleNewChange} />
-    </div>
-  );
-};
-
-const Button = ({ type, text, handleNewChange }) => {
-  return (
-    <button type={type} onClick={handleNewChange}>
-      {text}
-    </button>
-  );
-};
-
-const PersonForm = ({ onSubmit, newName, newNumber, handleNewName, handleNewNumber }) => {
-  return (
-    <form onSubmit={onSubmit}>
-      <Part text="name company:" value={newName} handleNewChange={handleNewName} />
-      <Part text="location:" value={newNumber} handleNewChange={handleNewNumber} />
-      <Button text="add" type="submit" />
-    </form>
-  );
-};
-
-const Persons = ({ personAfterFilter }) => {
-  return <ul>{personAfterFilter}</ul>;
-};
-
-const Notification = ({ message, notificationType }) => {
-  if (message === null) {
-    return null;
-  }
-
-  return (
-    <div className={`notification-container ${notificationType}`}>
-      {message}
-    </div>
-  );
-};
+import companiesServices from './services/companies';
+import './HitList.css';
+import Heading from './components/Heading';
+import Filter from './components/Filter';
+import CompanyForm from './components/CompanyForm';
+import Companies from './components/Companies';
+import Notification from './components/Notification';
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [newAbout, setNewAbout] = useState('');
   const [filterName, setFilterName] = useState('');
   const [changeMessage, setChangeMessage] = useState('');
   const [notificationType, setNotificationType] = useState('');
 
   useEffect(() => {
-    companiesServices.getAll().then((initialResult) => {
-      setPersons(initialResult);
+    companiesServices.getAll().then((initialCompanies) => {
+      console.log("Fetched Companies:", initialCompanies);
+      setCompanies(initialCompanies);
     });
   }, []);
 
-  const addPerson = async (event) => {
+  const addCompany = async (event) => {
     event.preventDefault();
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-    };
-
-    const checkName = persons.find(
-      (props) => props.name.toLowerCase() === newPerson.name.toLowerCase()
-    );
-    const changedPerson = { ...checkName, number: newNumber };
-
-    if (checkName && checkName.number === newPerson.number) {
+    
+   
+    if (!newName || !newNumber) {
       setNotificationType('error');
-      setChangeMessage(`${newName} is already added to hitlist`);
-    } else if (checkName && checkName.number !== newPerson.number) {
-      if (
-        window.confirm(
-          `${newName} is already added to hitlist replace the old number with a new one?`
-        )
-      ) {
+      setChangeMessage('Name and number are required!');
+      return;
+    }
+
+    const newCompany = { name: newName, number: newNumber, about: newAbout };
+
+    const existingCompany = companies.find(
+      (c) => c.name.toLowerCase() === newCompany.name.toLowerCase()
+    );
+
+    if (existingCompany) {
+      if (existingCompany.number === newCompany.number) {
+        setNotificationType('error');
+        setChangeMessage(`${newName} is already added to the list`);
+      } else if (window.confirm(`${newName} already exists. Update the address?`)) {
         try {
-          const returnedPerson = await companiesServices.updatePerson(
-            checkName.id,
-            changedPerson
-          );
-          setPersons(
-            persons.map((n) => (n.id !== checkName.id ? n : returnedPerson))
-          );
+          const updatedCompany = await companiesServices.update(existingCompany.id, { ...existingCompany, number: newNumber });
+          setCompanies(companies.map((c) => (c.id !== existingCompany.id ? c : updatedCompany)));
           setNewName('');
           setNewNumber('');
+          setNewAbout('');
           setNotificationType('success');
-          setChangeMessage(`Number of ${newName} is changed`);
+          setChangeMessage(`Updated ${newName}`);
+          setTimeout(() => {
+            setChangeMessage('');
+            setNotificationType('');
+          }, 4000); 
         } catch (error) {
+          console.error("Error updating company:", error);
           setNotificationType('error');
-          setChangeMessage(
-            `Information of ${newName} has already been removed from the server`
-          );
+          setChangeMessage(`Error updating ${newName}`);
         }
       }
     } else {
       try {
-        const returnedPerson = await companiesServices.create(newPerson);
-        setPersons(persons.concat(returnedPerson));
+        const addedCompany = await companiesServices.create(newCompany);
+        setCompanies(companies.concat(addedCompany));
         setNewName('');
         setNewNumber('');
+        setNewAbout('');
         setNotificationType('success');
-        setChangeMessage(`Successfully added ${newName}`);
+        setChangeMessage(`Added ${newName}`);
+        setTimeout(() => {
+          setChangeMessage('');
+          setNotificationType('');
+        }, 4000);
       } catch (error) {
+        console.error("Error adding company:", error);
         setNotificationType('error');
-        setChangeMessage(`[Error] ${error.response.data.error}`);
+        setChangeMessage(`Error: ${error.response?.data?.error || "Failed to add company"}`);
       }
     }
-
-    // Set a timeout to clear the notification after 5 seconds
-    setTimeout(() => {
-      setChangeMessage('');
-      setNotificationType('');
-    }, 5000);
   };
 
-  const handleNewName = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handleNewNumber = (event) => {
-    setNewNumber(event.target.value);
-  };
-
-  const handleNewFilter = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const filter = persons
-    ? persons.filter((props) =>
-        props.name.toLowerCase().includes(filterName.toLowerCase())
-      )
-    : [];
-  const deletePerson = async (id, name) => {
+  const deleteCompany = async (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       try {
-        await companiesServices.removePerson(id);
-        setPersons(persons.filter((p) => p.id !== id));
+        await companiesServices.removeCompany(id);  // Updated method name here
+        setCompanies(companies.filter((c) => c.id !== id));
         setNotificationType('success');
-        setChangeMessage(`Successfully deleted ${name}`);
+        setChangeMessage(`Deleted ${name}`);
+        setTimeout(() => {
+          setChangeMessage('');
+          setNotificationType('');
+        }, 4000); // Clear notification after 5 seconds
       } catch (error) {
-        console.error('Error deleting person:', error);
-        if (error.response && error.response.status === 404) {
-          // Person not found, might have already been deleted
-          setNotificationType('error');
-          setChangeMessage(`Person ${name} not found or already deleted`);
-        } else {
-          // Other error
-          setNotificationType('error');
-          setChangeMessage(`Error deleting ${name}: ${error.message}`);
-        }
+        console.error("Error deleting company:", error);
+        setNotificationType('error');
+        setChangeMessage(`Error deleting ${name}: ${error.message}`);
       }
-
-      // Set a timeout to clear the notification after 5 seconds
-      setTimeout(() => {
-        setChangeMessage('');
-        setNotificationType('');
-      }, 5000);
-
-      // Refresh the data after deleting a person
-      companiesServices.getAll().then((result) => {
-        setPersons(result);
-      });
     }
   };
-  
-  const People = ({ name, number, id }) => {
-    return (
-      <li>
-        {name} {number}{' '}
-        <Button
-          text="delete"
-          type="button"
-          handleNewChange={() => deletePerson(id, name)}
-        />
-      </li>
-    );
-  };
 
-  const personAfterFilter = filter.map((props) => (
-    <People key={props.id} name={props.name} number={props.number} id={props.id} />
-  ));
+  const handleNewName = (event) => setNewName(event.target.value);
+  const handleNewNumber = (event) => setNewNumber(event.target.value);
+  const handleNewAbout = (event) => setNewAbout(event.target.value);
+  const handleNewFilter = (event) => setFilterName(event.target.value);
+
+  const filteredCompanies = companies.filter((c) =>
+    c.name.toLowerCase().includes(filterName.toLowerCase())
+  );
 
   return (
     <div>
       <Heading text="HitList" />
       <Notification message={changeMessage} notificationType={notificationType} />
-      <Filter
-        text="Filter shown with"
-        value={filterName}
-        handleNewChange={handleNewFilter}
-      />
+      <Filter text="Filter shown with" value={filterName} handleNewChange={handleNewFilter} />
       <Heading text="Add a new company" />
-      <PersonForm
-        onSubmit={addPerson}
-        newName={newName}
-        newNumber={newNumber}
-        handleNewName={handleNewName}
-        handleNewNumber={handleNewNumber}
+      <CompanyForm 
+        onSubmit={addCompany} 
+        newName={newName} 
+        newNumber={newNumber} 
+        newAbout={newAbout} 
+        handleNewName={handleNewName} 
+        handleNewNumber={handleNewNumber} 
+        handleNewAbout={handleNewAbout} 
       />
-      <Heading text="Location" />
-      <Persons personAfterFilter={personAfterFilter} />
+      <Heading text="Companies" />
+      <Companies companies={filteredCompanies} deleteCompany={deleteCompany} />
     </div>
   );
 };
