@@ -2,6 +2,11 @@
 
 The **HitList** app is a simple React-based application that allows users to manage a list of companies. Users can add, filter, update, and delete company information. The app communicates with a backend service to store and manage the data.
 
+
+![Fun GIF](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzFlY25tbnF6a2U1Y3NnM3poa3l2Zzk3Y29wMmx2eHdsMmE3b3ZkciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8Cvv8FPd3Jd54i5HBs/giphy.gif)
+
+
+
 ## Features
 
 - **Add Companies**: Users can add a new company by providing the company name, phone number, and an optional description.
