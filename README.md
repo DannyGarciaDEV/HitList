@@ -65,3 +65,12 @@ Now, visit **`http://localhost:5173`** to see the app in action! 🚀
 
 Contributions are welcome! Feel free to fork the repo, submit pull requests, or report issues.  
 
+---
+
+## 📜 **License**  
+
+This project is licensed under the **MIT License**.  
+
+---
+
+
