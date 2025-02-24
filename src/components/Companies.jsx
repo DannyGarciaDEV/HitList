@@ -11,12 +11,13 @@ const Companies = ({ companies, deleteCompany }) => {
           {companies.map((company) => (
             <li key={company.id} className="company-item">
               <div className="company-info">
-                <strong>{company.name}</strong> | {company.number}
-                <p className="company-about"> <strong>About:</strong> {company.about}</p>
+                <strong>{company.companyName}</strong> | {company.jobTitle} | {company.location}
+                <p className="company-about"> <strong>Description:</strong> {company.description}</p>
+                <p className="company-url"> <strong>Post URL:</strong> <a href={company.postUrl} target="_blank" rel="noopener noreferrer">{company.postUrl}</a></p>
               </div>
               <button
                 className="delete-button"
-                onClick={() => deleteCompany(company.id, company.name)}
+                onClick={() => deleteCompany(company.id, company.companyName)}
               >
                 Delete
               </button>
