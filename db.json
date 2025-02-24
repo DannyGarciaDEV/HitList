@@ -1,10 +1,36 @@
 {
   "companies": [
-  {
+    {
       "id": "74a5",
-      "name": "Resilient Coders",
-      "number": "1 Broadway Camdridge, MA",
-      "about": "a nonprofit coding bootcamp training people of color from low income communities for high growth careers as software engineers."
+      "companyName": "Resilient Coders",
+      "jobTitle": "Full-Stack Software Engineer",
+      "location": "Remote",
+      "postUrl": "https://www.resilientcoders.org",
+      "description": "A nonprofit coding bootcamp training people of color from low-income communities for high-growth careers as software engineers."
+    },
+    {
+      "id": "3d21",
+      "companyName": "Slack Technologies",
+      "jobTitle": "Software Engineer",
+      "location": "Hybrid",
+      "postUrl": "https://slack.com/careers",
+      "description": "Join the Slack team as a Software Engineer to help build and maintain the world’s most effective team collaboration tool. You will be working on a fast-paced, customer-driven product that allows organizations to connect seamlessly and improve their productivity across the globe."
+    },
+    {
+      "id": "a1d9",
+      "companyName": "GitHub",
+      "jobTitle": "Engineering Manager",
+      "location": "Remote",
+      "postUrl": "https://github.com/about/careers",
+      "description": "GitHub is looking for an Engineering Manager to lead and guide our growing team of developers. In this role, you will be responsible for mentoring engineers, leading software development projects, and ensuring the quality of code in an Agile development environment."
+    },
+    {
+      "id": "f57d",
+      "companyName": "CarGurus",
+      "jobTitle": "Software Engineer",
+      "location": "Hybrid",
+      "postUrl": "https://www.cargurus.com/Careers",
+      "description": "CarGurus is looking for a Software Engineer to help build and improve our online automotive marketplace. As part of the engineering team, you'll develop scalable, reliable, and efficient solutions to enhance user experience, optimize search and recommendation algorithms, and contribute to the continued growth of CarGurus."
     }
   ]
 }
