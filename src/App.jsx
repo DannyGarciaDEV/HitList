@@ -10,8 +10,10 @@ import Notification from './components/Notification';
 const App = () => {
   const [companies, setCompanies] = useState([]);
   const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [newAbout, setNewAbout] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newLocation, setNewLocation] = useState('');
+  const [newUrl, setNewUrl] = useState('');
+  const [newDescription, setNewDescription] = useState('');
   const [filterName, setFilterName] = useState('');
   const [changeMessage, setChangeMessage] = useState('');
   const [notificationType, setNotificationType] = useState('');
@@ -26,36 +28,33 @@ const App = () => {
   const addCompany = async (event) => {
     event.preventDefault();
     
-   
-    if (!newName || !newNumber) {
+    if (!newName || !newTitle || !newLocation || !newUrl || !newDescription) {
       setNotificationType('error');
-      setChangeMessage('Name and number are required!');
+      setChangeMessage('All fields are required!');
       return;
     }
 
-    const newCompany = { name: newName, number: newNumber, about: newAbout };
+    const newCompany = { 
+      companyName: newName, 
+      jobTitle: newTitle, 
+      location: newLocation, 
+      postUrl: newUrl, 
+      description: newDescription 
+    };
 
     const existingCompany = companies.find(
-      (c) => c.name.toLowerCase() === newCompany.name.toLowerCase()
+      (c) => c.companyName.toLowerCase() === newCompany.companyName.toLowerCase()
     );
 
     if (existingCompany) {
-      if (existingCompany.number === newCompany.number) {
-        setNotificationType('error');
-        setChangeMessage(`${newName} is already added to the list`);
-      } else if (window.confirm(`${newName} already exists. Update the address?`)) {
+      if (window.confirm(`${newName} already exists. Update the details?`)) {
         try {
-          const updatedCompany = await companiesServices.update(existingCompany.id, { ...existingCompany, number: newNumber });
+          const updatedCompany = await companiesServices.update(existingCompany.id, { ...existingCompany, ...newCompany });
           setCompanies(companies.map((c) => (c.id !== existingCompany.id ? c : updatedCompany)));
-          setNewName('');
-          setNewNumber('');
-          setNewAbout('');
+          resetForm();
           setNotificationType('success');
           setChangeMessage(`Updated ${newName}`);
-          setTimeout(() => {
-            setChangeMessage('');
-            setNotificationType('');
-          }, 4000); 
+          clearNotification();
         } catch (error) {
           console.error("Error updating company:", error);
           setNotificationType('error');
@@ -66,15 +65,10 @@ const App = () => {
       try {
         const addedCompany = await companiesServices.create(newCompany);
         setCompanies(companies.concat(addedCompany));
-        setNewName('');
-        setNewNumber('');
-        setNewAbout('');
+        resetForm();
         setNotificationType('success');
         setChangeMessage(`Added ${newName}`);
-        setTimeout(() => {
-          setChangeMessage('');
-          setNotificationType('');
-        }, 4000);
+        clearNotification();
       } catch (error) {
         console.error("Error adding company:", error);
         setNotificationType('error');
@@ -86,14 +80,11 @@ const App = () => {
   const deleteCompany = async (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       try {
-        await companiesServices.removeCompany(id);  // Updated method name here
+        await companiesServices.removeCompany(id);
         setCompanies(companies.filter((c) => c.id !== id));
         setNotificationType('success');
         setChangeMessage(`Deleted ${name}`);
-        setTimeout(() => {
-          setChangeMessage('');
-          setNotificationType('');
-        }, 4000); // Clear notification after 5 seconds
+        clearNotification();
       } catch (error) {
         console.error("Error deleting company:", error);
         setNotificationType('error');
@@ -103,29 +94,52 @@ const App = () => {
   };
 
   const handleNewName = (event) => setNewName(event.target.value);
-  const handleNewNumber = (event) => setNewNumber(event.target.value);
-  const handleNewAbout = (event) => setNewAbout(event.target.value);
+  const handleNewTitle = (event) => setNewTitle(event.target.value);
+  const handleNewLocation = (event) => setNewLocation(event.target.value);
+  const handleNewUrl = (event) => setNewUrl(event.target.value);
+  const handleNewDescription = (event) => setNewDescription(event.target.value);
   const handleNewFilter = (event) => setFilterName(event.target.value);
 
+  const resetForm = () => {
+    setNewName('');
+    setNewTitle('');
+    setNewLocation('');
+    setNewUrl('');
+    setNewDescription('');
+  };
+
+  const clearNotification = () => {
+    setTimeout(() => {
+      setChangeMessage('');
+      setNotificationType('');
+    }, 4000);
+  };
+
   const filteredCompanies = companies.filter((c) =>
-    c.name.toLowerCase().includes(filterName.toLowerCase())
+    c.companyName.toLowerCase().includes(filterName.toLowerCase())
   );
 
   return (
     <div>
       <Heading text="HitList" />
       <Notification message={changeMessage} notificationType={notificationType} />
-      <Filter text="Filter shown with" value={filterName} handleNewChange={handleNewFilter} />
+    
       <Heading text="Add a new company" />
+    
       <CompanyForm 
         onSubmit={addCompany} 
         newName={newName} 
-        newNumber={newNumber} 
-        newAbout={newAbout} 
+        newTitle={newTitle} 
+        newLocation={newLocation} 
+        newUrl={newUrl} 
+        newDescription={newDescription} 
         handleNewName={handleNewName} 
-        handleNewNumber={handleNewNumber} 
-        handleNewAbout={handleNewAbout} 
+        handleNewTitle={handleNewTitle} 
+        handleNewLocation={handleNewLocation} 
+        handleNewUrl={handleNewUrl} 
+        handleNewDescription={handleNewDescription} 
       />
+        <Filter text="Filter shown with" value={filterName} handleNewChange={handleNewFilter} />
       <Heading text="Companies" />
       <Companies companies={filteredCompanies} deleteCompany={deleteCompany} />
     </div>
