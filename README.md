@@ -14,7 +14,6 @@ The **HitList** app is a simple, **React-based** application that helps users ma
 
 ✔ **Add Companies** – Easily add new companies with a name, phone number, and optional description.  
 🔍 **Filter Companies** – Quickly find a company by filtering the list based on its name.  
-📝 **Update Company Info** – Modify company details, including phone numbers.  
 🗑️ **Delete Companies** – Remove a company from the list with a single click.  
 📢 **Notifications** – Get real-time success or error messages for every action.  
 📱 **Responsive UI** – Works seamlessly across different screen sizes.  
